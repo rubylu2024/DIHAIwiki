@@ -1,0 +1,22 @@
+name: Deploy DIHAI Wiki
+
+on:
+  push:
+    branches:
+      - main   # ⚠️ 如果你是 master 就改成 master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 8.210.39.78
+          username: root
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /var/www/www.dihai.wiki
+            git pull
+            systemctl reload caddy
