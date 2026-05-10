@@ -98,6 +98,23 @@
             gap: 6px;
         }
 
+        .contact--trigger {
+            border: 0;
+            background: transparent;
+            padding: 2px 8px 4px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .contact--trigger:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        .contact--trigger:focus-visible {
+            outline: 2px solid rgba(228, 85, 59, 0.6);
+            outline-offset: 2px;
+        }
+
         .contact__label {
             font-size: 12px;
             color: #6e6e6e;
@@ -272,7 +289,7 @@
             top: 78px;
             width: 328px;
             padding: 14px 16px 14px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.82);
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
         }
 
@@ -333,7 +350,7 @@
         .footer__top {
             width: 100%;
             margin: 0;
-            padding: 86px 0 96px;
+            padding: 48px 0 54px;
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -357,6 +374,171 @@
             padding: 0 16px;
             font-size: 11px;
             color: #f6f1ee;
+            position: relative;
+        }
+
+        .footer__secret {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .footer__secret:hover {
+            color: rgba(255, 255, 255, 0.92);
+            text-decoration: underline;
+        }
+
+        .dialer-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 9999;
+            padding: 20px 16px;
+        }
+
+        .dialer-modal.is-open {
+            display: flex;
+        }
+
+        .dialer {
+            width: 360px;
+            max-width: calc(100vw - 32px);
+            border-radius: 22px;
+            background: #0f0f10;
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+        }
+
+        .dialer__top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 12px 10px;
+            background: #141416;
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .dialer__title {
+            font-size: 13px;
+            letter-spacing: 0.4px;
+        }
+
+        .dialer__close {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .dialer__close:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .dialer__screen {
+            padding: 14px 16px 8px;
+            background: #0f0f10;
+        }
+
+        .dialer__number {
+            min-height: 40px;
+            font-size: 28px;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .dialer__hint {
+            margin-top: 4px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.55);
+            text-align: center;
+        }
+
+        .dialer__pad {
+            padding: 12px 16px 16px;
+            background: #0f0f10;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .dialer__key {
+            border: 0;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            height: 62px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .dialer__key:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .dialer__digit {
+            font-size: 22px;
+            line-height: 1.05;
+        }
+
+        .dialer__letters {
+            margin-top: 4px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1;
+        }
+
+        .dialer__actions {
+            padding: 0 16px 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            background: #0f0f10;
+        }
+
+        .dialer__btn {
+            border: 0;
+            border-radius: 14px;
+            height: 44px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .dialer__btn--ghost {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.92);
+        }
+
+        .dialer__btn--ghost:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .dialer__btn--call {
+            flex: 1;
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .dialer__btn--call:hover {
+            filter: brightness(1.03);
         }
 
         @media (max-width: 1020px) {
@@ -395,15 +577,15 @@
                         <div class="brand__cn">灵天教育培训机构</div>
                     </div>
                 </div>
-                <div class="contact" id="contact">
-                    <div class="contact__label">联系我们</div>
-                    <div class="contact__phone">
+                <button class="contact contact--trigger" id="contactBtn" type="button" aria-haspopup="dialog" aria-controls="dialerModal" data-open-dialer="1">
+                    <span class="contact__label">联系我们</span>
+                    <span class="contact__phone">
                         <svg class="contact__icon" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6.6 10.8c1.4 2.6 3.9 5.1 6.5 6.5l2.2-2.2c.3-.3.8-.4 1.2-.2 1 .4 2 .7 3.1.8.5.1.9.5.9 1v3.4c0 .5-.4.9-.9 1C11.3 22.1 1.9 12.7 3.1 2.4c.1-.5.5-.9 1-.9h3.4c.5 0 .9.4 1 .9.1 1.1.4 2.1.8 3.1.1.4 0 .9-.3 1.2L6.6 10.8z"/>
                         </svg>
                         <span>400-810-3859</span>
-                    </div>
-                </div>
+                    </span>
+                </button>
             </div>
         </header>
 
@@ -417,7 +599,7 @@
 
         <nav class="menu">
             <div class="menu__inner">
-                <a class="menu__item" href="#test" aria-label="陨力测试">
+                <a class="menu__item" href="meteorite-test.html" aria-label="陨力测试">
                     <img class="menu__icon" src="image/image_5.png" alt="">
                     <div class="menu__label">
                         <div class="menu__cn">陨力测试</div>
@@ -482,12 +664,251 @@
                 <a href="#brain">换脑课程</a>
                 <a href="#products">相关产品</a>
                 <a href="#test">客户反馈</a>
-                <a href="#contact">联系我们</a>
+                <a href="#contact" id="contactLink" data-open-dialer="1">联系我们</a>
             </div>
             <div class="footer__bottom">
-                <div class="footer__bottom-inner">版权所有 © 灵天教育咨询有限公司所有</div>
+                <div class="footer__bottom-inner">
+                    <span>版权所有 © 灵天教育咨询有限公司所有</span>
+                    <a class="footer__secret" href="password-verify.html">感恩宇宙赐予能量</a>
+                </div>
             </div>
         </footer>
     </div>
+
+    <div class="dialer-modal" id="dialerModal" aria-hidden="true">
+        <div class="dialer" role="dialog" aria-modal="true" aria-labelledby="dialerTitle" tabindex="-1">
+            <div class="dialer__top">
+                <div class="dialer__title" id="dialerTitle">拨号</div>
+                <button class="dialer__close" type="button" id="dialerClose" aria-label="关闭">×</button>
+            </div>
+            <div class="dialer__screen">
+                <div class="dialer__number" id="dialerNumber"></div>
+                <div class="dialer__hint" id="dialerStatus">点击数字键输入，点击“拨号”开始</div>
+            </div>
+            <div class="dialer__pad" id="dialerPad">
+                <button class="dialer__key" type="button" data-key="1"><span class="dialer__digit">1</span><span class="dialer__letters">&nbsp;</span></button>
+                <button class="dialer__key" type="button" data-key="2"><span class="dialer__digit">2</span><span class="dialer__letters">ABC</span></button>
+                <button class="dialer__key" type="button" data-key="3"><span class="dialer__digit">3</span><span class="dialer__letters">DEF</span></button>
+                <button class="dialer__key" type="button" data-key="4"><span class="dialer__digit">4</span><span class="dialer__letters">GHI</span></button>
+                <button class="dialer__key" type="button" data-key="5"><span class="dialer__digit">5</span><span class="dialer__letters">JKL</span></button>
+                <button class="dialer__key" type="button" data-key="6"><span class="dialer__digit">6</span><span class="dialer__letters">MNO</span></button>
+                <button class="dialer__key" type="button" data-key="7"><span class="dialer__digit">7</span><span class="dialer__letters">PQRS</span></button>
+                <button class="dialer__key" type="button" data-key="8"><span class="dialer__digit">8</span><span class="dialer__letters">TUV</span></button>
+                <button class="dialer__key" type="button" data-key="9"><span class="dialer__digit">9</span><span class="dialer__letters">WXYZ</span></button>
+                <button class="dialer__key" type="button" data-key="*"><span class="dialer__digit">*</span><span class="dialer__letters">&nbsp;</span></button>
+                <button class="dialer__key" type="button" data-key="0"><span class="dialer__digit">0</span><span class="dialer__letters">+</span></button>
+                <button class="dialer__key" type="button" data-key="#"><span class="dialer__digit">#</span><span class="dialer__letters">&nbsp;</span></button>
+            </div>
+            <div class="dialer__actions">
+                <button class="dialer__btn dialer__btn--ghost" type="button" id="dialerBackspace">删除</button>
+                <button class="dialer__btn dialer__btn--call" type="button" id="dialerCall">拨号</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var contactBtn = document.getElementById("contactBtn");
+            var contactLink = document.getElementById("contactLink");
+            var modal = document.getElementById("dialerModal");
+            var dialog = modal ? modal.querySelector(".dialer") : null;
+            var closeBtn = document.getElementById("dialerClose");
+            var pad = document.getElementById("dialerPad");
+            var numberEl = document.getElementById("dialerNumber");
+            var statusEl = document.getElementById("dialerStatus");
+            var backspaceBtn = document.getElementById("dialerBackspace");
+            var callBtn = document.getElementById("dialerCall");
+
+            if (!contactBtn || !modal || !dialog || !pad || !numberEl || !statusEl || !closeBtn || !backspaceBtn || !callBtn) {
+                return;
+            }
+
+            var lastFocus = null;
+            var raw = "4008103859";
+            var scrollTop = 0;
+            var calling = false;
+            var defaultStatus = statusEl.textContent || "";
+            var loopAudio = new Audio("audio/灵天教育.wav");
+            loopAudio.loop = true;
+            var glitchAudio = new Audio("audio/glitch_electronic.wav");
+            glitchAudio.loop = false;
+
+            function formatNumber(value) {
+                var digits = value.replace(/[^\d*#]/g, "");
+                if (/^[0-9]+$/.test(digits)) {
+                    var a = digits.slice(0, 3);
+                    var b = digits.slice(3, 6);
+                    var c = digits.slice(6, 10);
+                    var rest = digits.slice(10);
+                    var out = "";
+                    if (a) out += a;
+                    if (b) out += "-" + b;
+                    if (c) out += "-" + c;
+                    if (rest) out += "-" + rest;
+                    return out;
+                }
+                return digits;
+            }
+
+            function render() {
+                numberEl.textContent = formatNumber(raw);
+            }
+
+            function stopAllAudio() {
+                try {
+                    loopAudio.pause();
+                    loopAudio.currentTime = 0;
+                } catch (e) {}
+                try {
+                    glitchAudio.pause();
+                    glitchAudio.currentTime = 0;
+                } catch (e) {}
+            }
+
+            function openModal() {
+                lastFocus = document.activeElement;
+                modal.classList.add("is-open");
+                modal.setAttribute("aria-hidden", "false");
+                scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+                document.body.style.position = "fixed";
+                document.body.style.top = "-" + scrollTop + "px";
+                document.body.style.width = "100%";
+                calling = false;
+                callBtn.disabled = false;
+                statusEl.textContent = defaultStatus;
+                render();
+                closeBtn.focus();
+            }
+
+            function closeModal() {
+                stopAllAudio();
+                modal.classList.remove("is-open");
+                modal.setAttribute("aria-hidden", "true");
+                document.body.style.position = "";
+                document.body.style.top = "";
+                document.body.style.width = "";
+                window.scrollTo(0, scrollTop);
+                calling = false;
+                if (lastFocus && typeof lastFocus.focus === "function") {
+                    lastFocus.focus();
+                }
+            }
+
+            function appendKey(key) {
+                raw = (raw + key).slice(0, 32);
+                render();
+            }
+
+            function backspace() {
+                raw = raw.slice(0, -1);
+                render();
+            }
+
+            function startCalling() {
+                if (calling) return;
+                calling = true;
+                callBtn.disabled = true;
+                statusEl.textContent = "拨号中，请开启声音…";
+                try {
+                    loopAudio.currentTime = 0;
+                } catch (e) {}
+                var p = loopAudio.play();
+                if (p && typeof p.catch === "function") {
+                    p.catch(function () {});
+                }
+            }
+
+            function triggerGlitchAndClose() {
+                if (!calling) return;
+                calling = false;
+                statusEl.textContent = "信号异常…";
+                stopAllAudio();
+                try {
+                    glitchAudio.currentTime = 0;
+                } catch (e) {}
+                glitchAudio.onended = function () {
+                    glitchAudio.onended = null;
+                    closeModal();
+                };
+                var p = glitchAudio.play();
+                if (p && typeof p.catch === "function") {
+                    p.catch(function () {
+                        closeModal();
+                    });
+                }
+            }
+
+            contactBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                openModal();
+            });
+            if (contactLink) {
+                contactLink.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    openModal();
+                });
+            }
+            document.addEventListener("click", function (e) {
+                var t = e.target;
+                if (!t) return;
+                var opener = t.closest ? t.closest("[data-open-dialer]") : null;
+                if (!opener) return;
+                e.preventDefault();
+                openModal();
+            });
+            closeBtn.addEventListener("click", closeModal);
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) closeModal();
+            });
+
+            pad.addEventListener("click", function (e) {
+                var target = e.target;
+                while (target && target !== pad && !(target.getAttribute && target.getAttribute("data-key"))) {
+                    target = target.parentElement;
+                }
+                if (target && target.getAttribute) {
+                    var k = target.getAttribute("data-key");
+                    if (k) {
+                        appendKey(k);
+                        if (k === "3") {
+                            triggerGlitchAndClose();
+                        }
+                    }
+                }
+            });
+
+            backspaceBtn.addEventListener("click", backspace);
+            callBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                startCalling();
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (!modal.classList.contains("is-open")) return;
+                if (e.key === "Escape") {
+                    e.preventDefault();
+                    closeModal();
+                    return;
+                }
+                if (e.key === "Backspace") {
+                    e.preventDefault();
+                    backspace();
+                    return;
+                }
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    startCalling();
+                    return;
+                }
+                if (/^[0-9]$/.test(e.key) || e.key === "*" || e.key === "#") {
+                    e.preventDefault();
+                    appendKey(e.key);
+                    if (e.key === "3") {
+                        triggerGlitchAndClose();
+                    }
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

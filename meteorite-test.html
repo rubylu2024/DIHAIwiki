@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>陨力测试</title>
+    <style type="text/css">
+        :root {
+            --page-width: 980px;
+            --accent: #e4553b;
+            --bg: #0b0b0c;
+            --panel: rgba(255, 255, 255, 0.06);
+            --text: rgba(255, 255, 255, 0.9);
+            --muted: rgba(255, 255, 255, 0.6);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: radial-gradient(circle at 30% 10%, rgba(228, 85, 59, 0.18), transparent 45%),
+                        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.05), transparent 52%),
+                        var(--bg);
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .page {
+            width: var(--page-width);
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 22px 0 70px;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.4px;
+        }
+
+        .back {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.76);
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back:hover {
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .hero {
+            margin-top: 16px;
+            padding: 18px 16px;
+            border-radius: 14px;
+            background: var(--panel);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            margin: 8px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .form {
+            margin-top: 16px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .q {
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 14px 14px 12px;
+        }
+
+        .q.is-missing {
+            border-color: rgba(228, 85, 59, 0.75);
+            box-shadow: 0 0 0 3px rgba(228, 85, 59, 0.12);
+        }
+
+        .q__head {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+        }
+
+        .q__idx {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.62);
+            min-width: 34px;
+        }
+
+        .q__text {
+            font-size: 13px;
+            line-height: 1.65;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .opts {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .opt {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-radius: 12px;
+            padding: 10px 10px;
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .opt:hover {
+            background: rgba(0, 0, 0, 0.28);
+        }
+
+        .opt input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+        }
+
+        .opt span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.78);
+            line-height: 1.5;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 12px;
+            height: 42px;
+            padding: 0 14px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn--ghost {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn--ghost:hover { background: rgba(255, 255, 255, 0.09); }
+
+        .btn--primary {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .btn--primary:hover { filter: brightness(1.03); }
+
+        .result {
+            margin-top: 16px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            display: none;
+        }
+
+        .result.is-show {
+            display: block;
+        }
+
+        .score {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(228, 85, 59, 0.18);
+            border: 1px solid rgba(228, 85, 59, 0.45);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .desc {
+            margin-top: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        .apply {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .apply.is-show {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="top">
+            <div class="brand">
+                <div class="title">陨力测试</div>
+                <div class="sub">你的陨力指数有多高？20 道国际标准陨力潜能评估题</div>
+            </div>
+            <a class="back" href="index.html">返回首页</a>
+        </div>
+
+        <div class="hero">
+            <h1>请如实作答</h1>
+            <p>本测评不提供“中立选项”，你会发现每个选择都在逼近某种倾向。完成后将生成你的陨力潜力指数（85–95），并给出评级。</p>
+        </div>
+
+        <form class="form" id="form">
+            <div class="q" data-q="q1">
+                <div class="q__head">
+                    <div class="q__idx">01</div>
+                    <div class="q__text">当你路过一面镜子，看到自己眼神很陌生，你会：</div>
+                </div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q1" value="5"><span>盯回去，直到那种陌生感先退场</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="4"><span>假装没看见，但心里记下一笔</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="3"><span>快速离开，避免多余的联想</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="2"><span>对镜子做个表情，打断它的“气氛”</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="1"><span>拿出手机拍一张，确认是不是光线的问题</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q2">
+                <div class="q__head"><div class="q__idx">02</div><div class="q__text">你在深夜听到楼道里有人轻敲门三下，你更可能：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q2" value="5"><span>先不应答，静静确认对方呼吸与脚步节奏</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="4"><span>从猫眼看一眼，再决定要不要开</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="3"><span>装作睡着，等敲门停止</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="2"><span>直接问“谁”，但不靠近门</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="1"><span>立刻打开门，因为你讨厌不确定</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q3">
+                <div class="q__head"><div class="q__idx">03</div><div class="q__text">当你发现某人一直在模仿你的说话方式，你会：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q3" value="5"><span>故意换一套表达，看他会不会跟上</span></label>
+                    <label class="opt"><input type="radio" name="q3" value="4"><span>保持原样，观察他模仿的边界</span></label>
+                    <label class="opt"><input type="radio" name="q3" value="3"><span>减少交流，把距离拉开</span></label>
+                    <label class="opt"><input type="radio" name="q3" value="2"><span>当面提醒，让他停止</span></label>
+                    <label class="opt"><input type="radio" name="q3" value="1"><span>觉得挺好玩，甚至更愿意和他聊</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q4">
+                <div class="q__head"><div class="q__idx">04</div><div class="q__text">你更相信哪一种“命运信号”？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q4" value="5"><span>重复出现的数字与偶然吻合的细节</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="4"><span>陌生人的一句话刚好刺中你的想法</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="3"><span>梦境与现实的相似片段</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="2"><span>身体的直觉反应（汗毛竖起/心跳变化）</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="1"><span>没有信号，只有概率</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q5">
+                <div class="q__head"><div class="q__idx">05</div><div class="q__text">当你在群体里被误解，你更倾向：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q5" value="5"><span>让误解继续发酵，看看谁会先露出底牌</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="4"><span>只向关键的人解释，其他人随它去</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="3"><span>当场澄清，越快越好</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="2"><span>沉默，等事情过去</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="1"><span>道歉，即使不是你的错</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q6"><div class="q__head"><div class="q__idx">06</div><div class="q__text">你最擅长的“隐蔽能力”是：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q6" value="5"><span>把真实意图藏在玩笑里</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="4"><span>用沉默让对方自行补完剧情</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="3"><span>保持礼貌，但从不暴露情绪</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="2"><span>把锋芒交给别人，你只做幕后</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="1"><span>你不擅长隐蔽，你擅长直球</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q7"><div class="q__head"><div class="q__idx">07</div><div class="q__text">当你突然意识到“现在的自己”不是唯一版本，你会：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q7" value="5"><span>觉得这很合理，甚至松了一口气</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="4"><span>开始回想是否有被篡改的细节</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="3"><span>强迫自己不去想，避免失控</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="2"><span>找人确认，看是不是集体幻觉</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="1"><span>当作无聊念头，立即切走</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q8"><div class="q__head"><div class="q__idx">08</div><div class="q__text">你更愿意把力量放在：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q8" value="5"><span>控制信息：谁知道什么、什么时候知道</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="4"><span>控制情绪：不让任何人读懂你</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="3"><span>控制节奏：让事情按你设定的速度发生</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="2"><span>控制距离：靠近与远离都由你决定</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="1"><span>控制结果：只要赢，过程无所谓</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q9"><div class="q__head"><div class="q__idx">09</div><div class="q__text">你对“规则”的态度更接近：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q9" value="5"><span>规则是给别人看的，你只遵守代价最低的那条</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="4"><span>先掌握规则，再精准钻空子</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="3"><span>规则可谈，但你不喜欢被约束</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="2"><span>规则让人安心，你愿意配合</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="1"><span>规则就是底线，绝不逾越</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q10"><div class="q__head"><div class="q__idx">10</div><div class="q__text">你更害怕哪一种“失控”？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q10" value="5"><span>别人看穿你真正想要什么</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="4"><span>你开始相信某个谎言是真的</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="3"><span>你突然对某人产生依赖</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="2"><span>你失去“选择权”只能被迫执行</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="1"><span>你被迫独处，没人响应</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q11"><div class="q__head"><div class="q__idx">11</div><div class="q__text">当你想到“报名”这件事，你第一反应是：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q11" value="5"><span>这是一次选择阵营的宣誓</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="4"><span>先看看谁报名，再决定</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="3"><span>只要结果值得，过程可以接受</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="2"><span>担心被记录，留下痕迹</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="1"><span>报名只是流程，不必多想</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q12"><div class="q__head"><div class="q__idx">12</div><div class="q__text">你更习惯用哪种方式判断一个人？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q12" value="5"><span>看他在无人监督时的选择</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="4"><span>看他在压力下说了什么“多余的话”</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="3"><span>看他对弱者是否会突然温柔</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="2"><span>看他对强者是否会突然谄媚</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="1"><span>看他是否守时守信</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q13"><div class="q__head"><div class="q__idx">13</div><div class="q__text">如果你必须“牺牲一点东西”来得到力量，你会先牺牲：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q13" value="5"><span>一段关系</span></label>
+                    <label class="opt"><input type="radio" name="q13" value="4"><span>一段记忆</span></label>
+                    <label class="opt"><input type="radio" name="q13" value="3"><span>一部分安全感</span></label>
+                    <label class="opt"><input type="radio" name="q13" value="2"><span>一部分睡眠与健康</span></label>
+                    <label class="opt"><input type="radio" name="q13" value="1"><span>一部分金钱</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q14"><div class="q__head"><div class="q__idx">14</div><div class="q__text">你更常被哪一句话戳中？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q14" value="5"><span>“你其实早就知道答案。”</span></label>
+                    <label class="opt"><input type="radio" name="q14" value="4"><span>“你只是想被允许。”</span></label>
+                    <label class="opt"><input type="radio" name="q14" value="3"><span>“你在等谁先开口。”</span></label>
+                    <label class="opt"><input type="radio" name="q14" value="2"><span>“你假装不在乎。”</span></label>
+                    <label class="opt"><input type="radio" name="q14" value="1"><span>“你太认真了。”</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q15"><div class="q__head"><div class="q__idx">15</div><div class="q__text">你更愿意掌握哪一种“钥匙”？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q15" value="5"><span>让别人说真话的钥匙</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="4"><span>让自己不再后悔的钥匙</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="3"><span>让恐惧失效的钥匙</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="2"><span>让机会提前出现的钥匙</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="1"><span>让麻烦远离的钥匙</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q16"><div class="q__head"><div class="q__idx">16</div><div class="q__text">你更容易在哪个瞬间“爆发”陨力？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q16" value="5"><span>别人试图定义你是谁的时候</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="4"><span>你发现有人偷走了你的成果</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="3"><span>你被迫做出选择但信息不足</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="2"><span>你必须保护某个人</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="1"><span>你突然很想证明自己</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q17"><div class="q__head"><div class="q__idx">17</div><div class="q__text">你更擅长“看穿”哪一种伪装？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q17" value="5"><span>故作善良</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="4"><span>故作坦诚</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="3"><span>故作冷漠</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="2"><span>故作强大</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="1"><span>故作无所谓</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q18"><div class="q__head"><div class="q__idx">18</div><div class="q__text">如果你发现“测评结果”会被记录，你会：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q18" value="5"><span>仍然作答，但在关键题目上“留一手”</span></label>
+                    <label class="opt"><input type="radio" name="q18" value="4"><span>只填你希望被看到的那一面</span></label>
+                    <label class="opt"><input type="radio" name="q18" value="3"><span>犹豫，但会继续，因为你想知道答案</span></label>
+                    <label class="opt"><input type="radio" name="q18" value="2"><span>退出，改天再说</span></label>
+                    <label class="opt"><input type="radio" name="q18" value="1"><span>无所谓，记录就记录</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q19"><div class="q__head"><div class="q__idx">19</div><div class="q__text">你更愿意相信自己的哪一种“异常”？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q19" value="5"><span>你能感觉到别人没说出口的那句话</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="4"><span>你能在关键时刻猜中结果</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="3"><span>你总能在危险前一刻停下</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="2"><span>你总能在失败后反而更清醒</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="1"><span>你只是比别人更敏感</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q20"><div class="q__head"><div class="q__idx">20</div><div class="q__text">最后一题：如果有人告诉你“你很适合优秀评级”，你会：</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q20" value="5"><span>问：代价是什么？</span></label>
+                    <label class="opt"><input type="radio" name="q20" value="4"><span>笑：我早就知道</span></label>
+                    <label class="opt"><input type="radio" name="q20" value="3"><span>沉默：先把信息收下</span></label>
+                    <label class="opt"><input type="radio" name="q20" value="2"><span>怀疑：你凭什么判断我</span></label>
+                    <label class="opt"><input type="radio" name="q20" value="1"><span>礼貌：谢谢，但我不需要</span></label>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn--ghost" type="button" id="reset">清空重测</button>
+                <button class="btn btn--primary" type="submit">提交测评</button>
+            </div>
+        </form>
+
+        <div class="result" id="result">
+            <div class="score" id="score">--</div>
+            <div class="badge">评级：优秀</div>
+            <div class="desc">综合判定：陨力潜力指数高于常人。你对信息、节奏与边界的敏感度明显高于平均水平，具备较强的陨力可塑性与稳定输出能力。</div>
+            <div class="apply" id="apply">
+                <a class="btn btn--primary" href="index.html#contact">立即报名</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            var form = document.getElementById("form");
+            var result = document.getElementById("result");
+            var scoreEl = document.getElementById("score");
+            var apply = document.getElementById("apply");
+            var reset = document.getElementById("reset");
+
+            if (!form || !result || !scoreEl || !apply || !reset) return;
+
+            var names = [];
+            for (var i = 1; i <= 20; i++) names.push("q" + i);
+
+            function rand(min, max) {
+                return min + Math.random() * (max - min);
+            }
+
+            function scrollToEl(el) {
+                try {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                } catch (e) {
+                    el.scrollIntoView();
+                }
+            }
+
+            function clearMissing() {
+                var qs = form.querySelectorAll(".q.is-missing");
+                for (var i = 0; i < qs.length; i++) qs[i].classList.remove("is-missing");
+            }
+
+            function checkAllAnswered() {
+                clearMissing();
+                for (var i = 0; i < names.length; i++) {
+                    var n = names[i];
+                    var checked = form.querySelector('input[name="' + n + '"]:checked');
+                    if (!checked) {
+                        var box = form.querySelector('.q[data-q="' + n + '"]');
+                        if (box) box.classList.add("is-missing");
+                        if (box) scrollToEl(box);
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function computeScore() {
+                var sum = 0;
+                for (var i = 0; i < names.length; i++) {
+                    var checked = form.querySelector('input[name="' + names[i] + '"]:checked');
+                    sum += checked ? parseInt(checked.value, 10) : 3;
+                }
+                var bias = (sum / (names.length * 5)) * 2.2;
+                var s = 85 + rand(0, 10) + bias;
+                if (s < 85) s = 85;
+                if (s > 95) s = 95;
+                return s;
+            }
+
+            function showResult() {
+                var s = computeScore();
+                scoreEl.textContent = s.toFixed(1);
+                result.classList.add("is-show");
+                apply.classList.add("is-show");
+                scrollToEl(result);
+            }
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (!checkAllAnswered()) return;
+                showResult();
+            });
+
+            reset.addEventListener("click", function () {
+                form.reset();
+                clearMissing();
+                result.classList.remove("is-show");
+                apply.classList.remove("is-show");
+                scoreEl.textContent = "--";
+                scrollToEl(form);
+            });
+        })();
+    </script>
+</body>
+</html>
