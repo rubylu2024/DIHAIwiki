@@ -586,7 +586,7 @@
                     </div>
                 </div>
                 <button class="contact contact--trigger" id="contactBtn" type="button" aria-haspopup="dialog" aria-controls="dialerModal" data-open-dialer="1">
-                    <span class="contact__label">联系我们</span>
+                    <span class="contact__label">点击此处联系我们</span>
                     <span class="contact__phone">
                         <svg class="contact__icon" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M6.6 10.8c1.4 2.6 3.9 5.1 6.5 6.5l2.2-2.2c.3-.3.8-.4 1.2-.2 1 .4 2 .7 3.1.8.5.1.9.5.9 1v3.4c0 .5-.4.9-.9 1C11.3 22.1 1.9 12.7 3.1 2.4c.1-.5.5-.9 1-.9h3.4c.5 0 .9.4 1 .9.1 1.1.4 2.1.8 3.1.1.4 0 .9-.3 1.2L6.6 10.8z"/>
@@ -732,7 +732,8 @@
             }
 
             var lastFocus = null;
-            var raw = "4008103859";
+            var correctNumber = "4008103859";
+            var raw = "";
             var scrollTop = 0;
             var calling = false;
             var defaultStatus = statusEl.textContent || "";
@@ -759,7 +760,13 @@
             }
 
             function render() {
-                numberEl.textContent = formatNumber(raw);
+                numberEl.textContent = raw ? formatNumber(raw) : "";
+                callBtn.disabled = calling || !isCorrectNumber();
+            }
+
+            function isCorrectNumber() {
+                if (!/^[0-9]+$/.test(raw)) return false;
+                return raw === correctNumber;
             }
 
             function stopAllAudio() {
@@ -782,8 +789,8 @@
                 document.body.style.top = "-" + scrollTop + "px";
                 document.body.style.width = "100%";
                 calling = false;
-                callBtn.disabled = false;
                 statusEl.textContent = defaultStatus;
+                raw = "";
                 render();
                 closeBtn.focus();
             }
@@ -804,19 +811,26 @@
 
             function appendKey(key) {
                 raw = (raw + key).slice(0, 32);
+                if (!calling && statusEl.textContent !== defaultStatus) statusEl.textContent = defaultStatus;
                 render();
             }
 
             function backspace() {
                 raw = raw.slice(0, -1);
+                if (!calling && statusEl.textContent !== defaultStatus) statusEl.textContent = defaultStatus;
                 render();
             }
 
             function startCalling() {
                 if (calling) return;
+                if (!isCorrectNumber()) {
+                    statusEl.textContent = "拨号失败";
+                    render();
+                    return;
+                }
                 calling = true;
-                callBtn.disabled = true;
                 statusEl.textContent = "拨号中，请开启声音…";
+                render();
                 try {
                     loopAudio.currentTime = 0;
                 } catch (e) {}

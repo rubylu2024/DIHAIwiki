@@ -251,6 +251,10 @@
             display: flex;
             justify-content: flex-end;
         }
+
+        .is-hide {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -265,7 +269,6 @@
 
         <div class="hero">
             <h1>请如实作答</h1>
-            <p>本测评不提供“中立选项”，你会发现每个选择都在逼近某种倾向。完成后将生成你的陨力潜力指数（85–95），并给出评级。</p>
         </div>
 
         <form class="form" id="form">
@@ -478,7 +481,6 @@
             </div>
 
             <div class="actions">
-                <button class="btn btn--ghost" type="button" id="reset">清空重测</button>
                 <button class="btn btn--primary" type="submit">提交测评</button>
             </div>
         </form>
@@ -499,12 +501,15 @@
             var result = document.getElementById("result");
             var scoreEl = document.getElementById("score");
             var apply = document.getElementById("apply");
-            var reset = document.getElementById("reset");
 
-            if (!form || !result || !scoreEl || !apply || !reset) return;
+            if (!form || !result || !scoreEl || !apply) return;
 
             var names = [];
             for (var i = 1; i <= 20; i++) names.push("q" + i);
+            var qEls = form.querySelectorAll(".q");
+            var submitBtn = form.querySelector('button[type="submit"]');
+            var step = 0;
+            var submitted = false;
 
             function rand(min, max) {
                 return min + Math.random() * (max - min);
@@ -523,13 +528,37 @@
                 for (var i = 0; i < qs.length; i++) qs[i].classList.remove("is-missing");
             }
 
+            function getCheckedForStep(idx) {
+                var n = names[idx];
+                return n ? form.querySelector('input[name="' + n + '"]:checked') : null;
+            }
+
+            function updateNav() {
+                var isLast = step >= names.length - 1;
+                var checked = getCheckedForStep(step);
+
+                if (submitBtn) {
+                    submitBtn.classList.toggle("is-hide", !isLast);
+                    submitBtn.disabled = !isLast || !checked;
+                }
+            }
+
+            function showStep(idx) {
+                step = idx;
+                for (var i = 0; i < qEls.length; i++) qEls[i].hidden = i !== step;
+                clearMissing();
+                updateNav();
+                if (qEls[step]) scrollToEl(qEls[step]);
+            }
+
             function checkAllAnswered() {
                 clearMissing();
                 for (var i = 0; i < names.length; i++) {
                     var n = names[i];
                     var checked = form.querySelector('input[name="' + n + '"]:checked');
                     if (!checked) {
-                        var box = form.querySelector('.q[data-q="' + n + '"]');
+                        showStep(i);
+                        var box = qEls[i];
                         if (box) box.classList.add("is-missing");
                         if (box) scrollToEl(box);
                         return false;
@@ -552,27 +581,47 @@
             }
 
             function showResult() {
+                if (submitted) return;
+                submitted = true;
                 var s = computeScore();
                 scoreEl.textContent = s.toFixed(1);
                 result.classList.add("is-show");
                 apply.classList.add("is-show");
+                if (submitBtn) submitBtn.disabled = true;
                 scrollToEl(result);
             }
 
+            function goNext() {
+                if (!getCheckedForStep(step)) {
+                    if (qEls[step]) qEls[step].classList.add("is-missing");
+                    if (qEls[step]) scrollToEl(qEls[step]);
+                    updateNav();
+                    return;
+                }
+                if (step < names.length - 1) showStep(step + 1);
+            }
+
+            form.addEventListener("change", function (e) {
+                var t = e.target;
+                if (!t || t.type !== "radio") return;
+                if (!qEls[step] || !qEls[step].contains(t)) return;
+
+                if (qEls[step]) qEls[step].classList.remove("is-missing");
+                updateNav();
+
+                if (step < names.length - 1) {
+                    setTimeout(goNext, 120);
+                }
+            });
+
             form.addEventListener("submit", function (e) {
                 e.preventDefault();
+                if (submitted) return;
                 if (!checkAllAnswered()) return;
                 showResult();
             });
 
-            reset.addEventListener("click", function () {
-                form.reset();
-                clearMissing();
-                result.classList.remove("is-show");
-                apply.classList.remove("is-show");
-                scoreEl.textContent = "--";
-                scrollToEl(form);
-            });
+            showStep(0);
         })();
     </script>
 </body>
