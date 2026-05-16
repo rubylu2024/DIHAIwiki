@@ -264,7 +264,7 @@
                 <div class="title">陨力测试</div>
                 <div class="sub">你的陨力指数有多高？20 道国际标准陨力潜能评估题</div>
             </div>
-            <a class="back" href="index.html">返回首页</a>
+            <a class="back" href="index.html" data-lock-nav="1">返回首页</a>
         </div>
 
         <div class="hero">
@@ -490,7 +490,7 @@
             <div class="badge">评级：优秀</div>
             <div class="desc">综合判定：陨力潜力指数高于常人。你对信息、节奏与边界的敏感度明显高于平均水平，具备较强的陨力可塑性与稳定输出能力。</div>
             <div class="apply" id="apply">
-                <a class="btn btn--primary" href="index.html#contact">立即报名</a>
+                <a class="btn btn--primary" href="index.html#contact" data-lock-nav="1">立即报名</a>
             </div>
         </div>
     </div>
@@ -622,6 +622,45 @@
             });
 
             showStep(0);
+        })();
+    </script>
+    <script>
+        (function () {
+            function ensureToast() {
+                var el = document.getElementById("lockToast");
+                if (el) return el;
+
+                var style = document.createElement("style");
+                style.type = "text/css";
+                style.textContent = ".lock-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;letter-spacing:1px;z-index:9999;border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .18s ease}.lock-toast.is-show{opacity:1}";
+                document.head.appendChild(style);
+
+                el = document.createElement("div");
+                el.id = "lockToast";
+                el.className = "lock-toast";
+                el.textContent = "暂未解锁";
+                document.body.appendChild(el);
+                return el;
+            }
+
+            var timer = 0;
+            function showToast() {
+                var el = ensureToast();
+                el.classList.add("is-show");
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function () {
+                    el.classList.remove("is-show");
+                }, 900);
+            }
+
+            document.addEventListener("click", function (e) {
+                var t = e.target;
+                if (!t || !t.closest) return;
+                var link = t.closest('a[data-lock-nav="1"]');
+                if (!link) return;
+                e.preventDefault();
+                showToast();
+            }, true);
         })();
     </script>
 </body>
