@@ -607,7 +607,7 @@
 
         <nav class="menu">
             <div class="menu__inner">
-                <a class="menu__item" href="meteorite-test.html" aria-label="陨力测试">
+                <a class="menu__item" href="meteorite-test.html" aria-label="陨力测试" data-lock-nav="1">
                     <img class="menu__icon" src="image/image_5.png" alt="">
                     <div class="menu__label">
                         <div class="menu__cn">陨力测试</div>
@@ -677,7 +677,7 @@
             <div class="footer__bottom">
                 <div class="footer__bottom-inner">
                     <span class="footer__copyright">版权所有 © 灵天教育咨询有限公司所有</span>
-                    <a class="footer__secret" href="password-verify.html">感恩宇宙赐予能量</a>
+                    <a class="footer__secret" href="password-verify.html" data-lock-nav="1">感恩宇宙赐予能量</a>
                 </div>
             </div>
         </footer>
@@ -964,6 +964,14 @@
             document.addEventListener("click", function (e) {
                 var t = e.target;
                 if (!t || !t.closest) return;
+
+                var lockLink = t.closest('a[data-lock-nav="1"]');
+                if (lockLink) {
+                    e.preventDefault();
+                    showToast();
+                    return;
+                }
+
                 var btn = t.closest("button");
                 if (!btn) return;
                 e.preventDefault();
