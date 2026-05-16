@@ -932,5 +932,46 @@
             });
         })();
     </script>
+    <script>
+        (function () {
+            function ensureToast() {
+                var el = document.getElementById("lockToast");
+                if (el) return el;
+
+                var style = document.createElement("style");
+                style.type = "text/css";
+                style.textContent = ".lock-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;letter-spacing:1px;z-index:9999;border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .18s ease}.lock-toast.is-show{opacity:1}";
+                document.head.appendChild(style);
+
+                el = document.createElement("div");
+                el.id = "lockToast";
+                el.className = "lock-toast";
+                el.textContent = "暂未解锁";
+                document.body.appendChild(el);
+                return el;
+            }
+
+            var timer = 0;
+            function showToast() {
+                var el = ensureToast();
+                el.classList.add("is-show");
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function () {
+                    el.classList.remove("is-show");
+                }, 900);
+            }
+
+            document.addEventListener("click", function (e) {
+                var t = e.target;
+                if (!t || !t.closest) return;
+                var btn = t.closest("button");
+                if (!btn) return;
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+                showToast();
+            }, true);
+        })();
+    </script>
 </body>
 </html>
