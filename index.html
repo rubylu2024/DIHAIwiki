@@ -573,6 +573,89 @@
             }
         }
     </style>
+    <script>
+        (function () {
+            var KEY = "DIHAIwiki:version";
+
+            function safeGetStorage() {
+                try {
+                    return window.localStorage;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function bustUrl(u, v) {
+                if (!u) return u;
+                if (/^(data:|blob:|https?:)/i.test(u)) return u;
+                try {
+                    var url = new URL(u, location.href);
+                    url.searchParams.set("v", v);
+                    return url.pathname + url.search + url.hash;
+                } catch (e) {
+                    return u;
+                }
+            }
+
+            function bustCss(cssText, v) {
+                return String(cssText || "").replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/g, function (m, q, u) {
+                    if (/^(data:|blob:|https?:)/i.test(u)) return m;
+                    var nu = bustUrl(u, v);
+                    return "url(" + (q || "") + nu + (q || "") + ")";
+                });
+            }
+
+            function ensureParamV(v) {
+                try {
+                    var url = new URL(location.href);
+                    if (url.searchParams.get("v") === v) return;
+                    url.searchParams.set("v", v);
+                    location.replace(url.toString());
+                } catch (e) {}
+            }
+
+            var store = safeGetStorage();
+            var initialV = "";
+            try {
+                initialV = new URL(location.href).searchParams.get("v") || "";
+            } catch (e) {}
+            var v = initialV || (store ? store.getItem(KEY) : "") || "dev";
+
+            try {
+                var styles = document.querySelectorAll("style");
+                for (var i = 0; i < styles.length; i++) {
+                    styles[i].textContent = bustCss(styles[i].textContent, v);
+                }
+            } catch (e) {}
+
+            document.addEventListener("DOMContentLoaded", function () {
+                try {
+                    var nodes = document.querySelectorAll("img[src], audio[src], source[src]");
+                    for (var i = 0; i < nodes.length; i++) {
+                        var el = nodes[i];
+                        var attr = el.tagName === "IMG" ? "src" : "src";
+                        var cur = el.getAttribute(attr);
+                        var next = bustUrl(cur, v);
+                        if (next && next !== cur) el.setAttribute(attr, next);
+                    }
+                } catch (e) {}
+            });
+
+            try {
+                fetch("version.txt?ts=" + Date.now(), { cache: "no-store" })
+                    .then(function (r) { return r.ok ? r.text() : ""; })
+                    .then(function (t) {
+                        var latest = String(t || "").trim();
+                        if (!latest) return;
+                        var cur = v;
+                        if (cur === latest) return;
+                        if (store) store.setItem(KEY, latest);
+                        ensureParamV(latest);
+                    })
+                    .catch(function () {});
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body>
     <div class="page">

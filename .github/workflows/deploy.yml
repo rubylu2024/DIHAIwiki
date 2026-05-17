@@ -19,4 +19,5 @@ jobs:
           script: |
             cd /var/www/www.dihai.wiki
             git pull
+            git rev-parse --short HEAD > version.txt
             systemctl reload caddy
