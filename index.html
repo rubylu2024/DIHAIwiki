@@ -340,6 +340,48 @@
         .placeholder {
             height: 520px;
             background: #cfcfcf;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .placeholder__center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .placeholder__notice {
+            width: min(780px, 100%);
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+            padding: 18px 18px;
+            color: #2b2b2b;
+            letter-spacing: 0.6px;
+        }
+
+        .placeholder__addr {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .placeholder__welcome {
+            margin: 10px 0 0;
+            font-size: 13px;
+            color: #4b4b4b;
+            line-height: 1.7;
+        }
+
+        .placeholder__img {
+            width: min(920px, 100%);
+            max-height: 100%;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
         }
 
         .footer {
@@ -690,7 +732,7 @@
 
         <nav class="menu">
             <div class="menu__inner">
-                <a class="menu__item" href="meteorite-test.html" aria-label="陨力测试" data-lock-nav="1">
+                <a class="menu__item" href="meteorite-test.html" aria-label="陨力测试">
                     <img class="menu__icon" src="image/image_5.png" alt="">
                     <div class="menu__label">
                         <div class="menu__cn">陨力测试</div>
@@ -746,6 +788,17 @@
             <section class="placeholder" id="products">
                 <div id="test"></div>
                 <div id="brain"></div>
+                <div class="placeholder__center">
+                    <div class="placeholder__notice" id="aboutNotice" hidden tabindex="-1" aria-live="polite">
+                        <p class="placeholder__addr">地址：渝城市宁水双区槐阳大路901号</p>
+                        <p class="placeholder__welcome">灵天教育全体员工诚挚恭迎您前来洽谈！</p>
+                    </div>
+                    <div class="placeholder__notice" id="detailsNotice" hidden tabindex="-1" aria-live="polite">
+                        <p class="placeholder__addr">请呼400-810-3859，提示音后转拨359。</p>
+                        <p class="placeholder__welcome">我们的员工会为您转接负责人，谢谢！</p>
+                    </div>
+                    <div id="productsImgWrap" hidden></div>
+                </div>
             </section>
         </main>
 
@@ -760,7 +813,7 @@
             <div class="footer__bottom">
                 <div class="footer__bottom-inner">
                     <span class="footer__copyright">版权所有 © 灵天教育咨询有限公司所有</span>
-                    <a class="footer__secret" href="password-verify.html" data-lock-nav="1">感恩宇宙赐予能量</a>
+                    <a class="footer__secret" href="password-verify.html">感恩宇宙赐予能量</a>
                 </div>
             </div>
         </footer>
@@ -819,11 +872,15 @@
             var raw = "";
             var scrollTop = 0;
             var calling = false;
+            var ending = false;
             var defaultStatus = statusEl.textContent || "";
             var loopAudio = new Audio("audio/灵天教育.wav");
             loopAudio.loop = true;
-            var glitchAudio = new Audio("audio/glitch_electronic.wav");
-            glitchAudio.loop = false;
+            var busyAudio = new Audio("audio/忙音.mp3");
+            busyAudio.loop = false;
+            var seq = "";
+            var seqTimer = 0;
+            var during = "";
 
             function formatNumber(value) {
                 var digits = value.replace(/[^\d*#]/g, "");
@@ -843,8 +900,9 @@
             }
 
             function render() {
-                numberEl.textContent = raw ? formatNumber(raw) : "";
-                callBtn.disabled = calling || !isCorrectNumber();
+                var base = raw ? formatNumber(raw) : "";
+                numberEl.textContent = base + (during ? " " + during : "");
+                callBtn.disabled = calling || ending || !isCorrectNumber();
             }
 
             function isCorrectNumber() {
@@ -858,9 +916,26 @@
                     loopAudio.currentTime = 0;
                 } catch (e) {}
                 try {
-                    glitchAudio.pause();
-                    glitchAudio.currentTime = 0;
+                    busyAudio.pause();
+                    busyAudio.currentTime = 0;
                 } catch (e) {}
+            }
+
+            function clearSeq() {
+                if (seqTimer) {
+                    clearTimeout(seqTimer);
+                    seqTimer = 0;
+                }
+                seq = "";
+            }
+
+            function clearDuring() {
+                during = "";
+            }
+
+            function appendDuring(key) {
+                during = (during + key).slice(0, 32);
+                render();
             }
 
             function openModal() {
@@ -872,6 +947,9 @@
                 document.body.style.top = "-" + scrollTop + "px";
                 document.body.style.width = "100%";
                 calling = false;
+                ending = false;
+                clearSeq();
+                clearDuring();
                 statusEl.textContent = defaultStatus;
                 raw = "";
                 render();
@@ -880,6 +958,8 @@
 
             function closeModal() {
                 stopAllAudio();
+                clearSeq();
+                clearDuring();
                 modal.classList.remove("is-open");
                 modal.setAttribute("aria-hidden", "true");
                 document.body.style.position = "";
@@ -887,6 +967,7 @@
                 document.body.style.width = "";
                 window.scrollTo(0, scrollTop);
                 calling = false;
+                ending = false;
                 if (lastFocus && typeof lastFocus.focus === "function") {
                     lastFocus.focus();
                 }
@@ -905,15 +986,19 @@
             }
 
             function startCalling() {
-                if (calling) return;
+                if (calling || ending) return;
                 if (!isCorrectNumber()) {
                     statusEl.textContent = "拨号失败";
                     render();
                     return;
                 }
                 calling = true;
+                ending = false;
+                clearSeq();
+                clearDuring();
                 statusEl.textContent = "拨号中，请开启声音…";
                 render();
+                stopAllAudio();
                 try {
                     loopAudio.currentTime = 0;
                 } catch (e) {}
@@ -923,23 +1008,74 @@
                 }
             }
 
-            function triggerGlitchAndClose() {
-                if (!calling) return;
-                calling = false;
-                statusEl.textContent = "信号异常…";
-                stopAllAudio();
+            function triggerBusyAndClose() {
+                if (!calling || ending) return;
+                clearSeq();
+                ending = true;
+                statusEl.textContent = "发生错误。";
+                render();
                 try {
-                    glitchAudio.currentTime = 0;
+                    loopAudio.pause();
+                    loopAudio.currentTime = 0;
                 } catch (e) {}
-                glitchAudio.onended = function () {
-                    glitchAudio.onended = null;
-                    closeModal();
+                try {
+                    busyAudio.currentTime = 0;
+                } catch (e) {}
+                busyAudio.onended = function () {
+                    busyAudio.onended = null;
+                    setTimeout(function () {
+                        closeModal();
+                    }, 350);
                 };
-                var p = glitchAudio.play();
+                var p = busyAudio.play();
                 if (p && typeof p.catch === "function") {
                     p.catch(function () {
                         closeModal();
                     });
+                }
+            }
+
+            function handleDuringCalling(key) {
+                if (!calling || ending) return;
+
+                if (!seq) {
+                    if (key !== "3") return;
+                    seq = "3";
+                    seqTimer = setTimeout(function () {
+                        clearSeq();
+                        triggerBusyAndClose();
+                    }, 1200);
+                    return;
+                }
+
+                if (seq === "3") {
+                    if (key === "5") {
+                        clearTimeout(seqTimer);
+                        seqTimer = setTimeout(function () {
+                            clearSeq();
+                            triggerBusyAndClose();
+                        }, 1200);
+                        seq = "35";
+                        return;
+                    }
+                    clearSeq();
+                    triggerBusyAndClose();
+                    return;
+                }
+
+                if (seq === "35") {
+                    if (key === "9") {
+                        clearSeq();
+                        stopAllAudio();
+                        calling = false;
+                        ending = true;
+                        statusEl.textContent = "已停机……";
+                        render();
+                        return;
+                    }
+                    clearSeq();
+                    triggerBusyAndClose();
+                    return;
                 }
             }
 
@@ -974,10 +1110,12 @@
                 if (target && target.getAttribute) {
                     var k = target.getAttribute("data-key");
                     if (k) {
-                        appendKey(k);
-                        if (k === "3") {
-                            triggerGlitchAndClose();
+                        if (calling) {
+                            appendDuring(k);
+                            if (/^[0-9]$/.test(k)) handleDuringCalling(k);
+                            return;
                         }
+                        appendKey(k);
                     }
                 }
             });
@@ -1007,61 +1145,114 @@
                 }
                 if (/^[0-9]$/.test(e.key) || e.key === "*" || e.key === "#") {
                     e.preventDefault();
-                    appendKey(e.key);
-                    if (e.key === "3") {
-                        triggerGlitchAndClose();
+                    if (calling) {
+                        appendDuring(e.key);
+                        if (/^[0-9]$/.test(e.key)) handleDuringCalling(e.key);
+                        return;
                     }
+                    appendKey(e.key);
                 }
             });
         })();
     </script>
     <script>
         (function () {
-            function ensureToast() {
-                var el = document.getElementById("lockToast");
-                if (el) return el;
-
-                var style = document.createElement("style");
-                style.type = "text/css";
-                style.textContent = ".lock-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 14px;border-radius:10px;font-size:12px;letter-spacing:1px;z-index:9999;border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .18s ease}.lock-toast.is-show{opacity:1}";
-                document.head.appendChild(style);
-
-                el = document.createElement("div");
-                el.id = "lockToast";
-                el.className = "lock-toast";
-                el.textContent = "暂未解锁";
-                document.body.appendChild(el);
-                return el;
-            }
-
-            var timer = 0;
-            function showToast() {
-                var el = ensureToast();
-                el.classList.add("is-show");
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(function () {
-                    el.classList.remove("is-show");
-                }, 900);
-            }
-
-            document.addEventListener("click", function (e) {
-                var t = e.target;
-                if (!t || !t.closest) return;
-
-                var lockLink = t.closest('a[data-lock-nav="1"]');
-                if (lockLink) {
-                    e.preventDefault();
-                    showToast();
-                    return;
+            function showAboutNotice() {
+                var notice = document.getElementById("aboutNotice");
+                var other = document.getElementById("detailsNotice");
+                var wrap = document.getElementById("productsImgWrap");
+                var box = document.getElementById("products");
+                if (!notice || !box) return;
+                if (other) other.hidden = true;
+                if (wrap) wrap.hidden = true;
+                notice.hidden = false;
+                try {
+                    notice.focus();
+                } catch (e) {}
+                try {
+                    box.scrollIntoView({ behavior: "smooth", block: "start" });
+                } catch (e) {
+                    box.scrollIntoView();
                 }
+            }
 
-                var btn = t.closest("button");
-                if (!btn) return;
-                e.preventDefault();
-                e.stopPropagation();
-                if (e.stopImmediatePropagation) e.stopImmediatePropagation();
-                showToast();
-            }, true);
+            function showDetailsNotice() {
+                var notice = document.getElementById("detailsNotice");
+                var other = document.getElementById("aboutNotice");
+                var wrap = document.getElementById("productsImgWrap");
+                var box = document.getElementById("products");
+                if (!notice || !box) return;
+                if (other) other.hidden = true;
+                if (wrap) wrap.hidden = true;
+                notice.hidden = false;
+                try {
+                    notice.focus();
+                } catch (e) {}
+                try {
+                    box.scrollIntoView({ behavior: "smooth", block: "start" });
+                } catch (e) {
+                    box.scrollIntoView();
+                }
+            }
+
+            function bind(selector) {
+                var els = document.querySelectorAll(selector);
+                for (var i = 0; i < els.length; i++) {
+                    els[i].addEventListener("click", function (e) {
+                        e.preventDefault();
+                        showAboutNotice();
+                    });
+                }
+            }
+
+            function bindDetails(selector) {
+                var els = document.querySelectorAll(selector);
+                for (var i = 0; i < els.length; i++) {
+                    els[i].addEventListener("click", function (e) {
+                        e.preventDefault();
+                        showDetailsNotice();
+                    });
+                }
+            }
+
+            function showProductsImage() {
+                var wrap = document.getElementById("productsImgWrap");
+                var about = document.getElementById("aboutNotice");
+                var details = document.getElementById("detailsNotice");
+                var box = document.getElementById("products");
+                if (!wrap || !box) return;
+                if (about) about.hidden = true;
+                if (details) details.hidden = true;
+                wrap.hidden = false;
+                if (!wrap.firstChild) {
+                    var img = document.createElement("img");
+                    img.className = "placeholder__img";
+                    img.src = "image/更多产品.png";
+                    img.alt = "更多产品";
+                    wrap.appendChild(img);
+                }
+                try {
+                    box.scrollIntoView({ behavior: "smooth", block: "start" });
+                } catch (e) {
+                    box.scrollIntoView();
+                }
+            }
+
+            function bindProducts(selector) {
+                var els = document.querySelectorAll(selector);
+                for (var i = 0; i < els.length; i++) {
+                    els[i].addEventListener("click", function (e) {
+                        e.preventDefault();
+                        showProductsImage();
+                    });
+                }
+            }
+
+            bind('a.menu__item[href="#about"]');
+            bind('footer a[href="#about"]');
+            bindDetails("a.feature__btn");
+            bindProducts('a.menu__item[href="#products"]');
+            bindProducts('footer a[href="#products"]');
         })();
     </script>
 </body>

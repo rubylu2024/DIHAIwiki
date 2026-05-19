@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>灵天中学·学习潜能评估系统</title>
+    <link rel="preload" as="image" href="image/陨力测试1.gif">
+    <link rel="preload" as="image" href="image/陨力测试2.gif">
+    <link rel="preload" as="image" href="image/jump/1.png">
+    <link rel="preload" as="image" href="image/jump/2.png">
+    <style type="text/css">
+        :root {
+            --page-width: 1040px;
+            --accent: #ff4fd8;
+            --accent2: #66e7ff;
+            --bg: #05040b;
+            --panel: rgba(18, 16, 30, 0.78);
+            --panel2: rgba(10, 9, 20, 0.70);
+            --border: rgba(255, 255, 255, 0.10);
+            --text: rgba(245, 242, 255, 0.96);
+            --muted: rgba(220, 214, 245, 0.72);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background:
+                radial-gradient(720px 420px at 20% 0%, rgba(255, 79, 216, 0.22), transparent 62%),
+                radial-gradient(760px 420px at 92% 6%, rgba(102, 231, 255, 0.18), transparent 62%),
+                radial-gradient(820px 520px at 50% 120%, rgba(140, 90, 255, 0.18), transparent 62%),
+                linear-gradient(180deg, #0a0820, var(--bg));
+            color: var(--text);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.08) 1px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0) 5px),
+                radial-gradient(circle at 14% 18%, rgba(255,255,255,.12) 0 1px, transparent 2px) 0 0/180px 180px,
+                radial-gradient(circle at 64% 40%, rgba(255,255,255,.10) 0 1px, transparent 2px) 0 0/220px 220px,
+                radial-gradient(circle at 88% 72%, rgba(255,255,255,.09) 0 1px, transparent 2px) 0 0/260px 260px;
+            opacity: 0.32;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(600px 260px at 50% 22%, rgba(255, 79, 216, 0.12), transparent 65%),
+                radial-gradient(700px 340px at 50% 85%, rgba(102, 231, 255, 0.10), transparent 62%);
+            mix-blend-mode: screen;
+            opacity: 0.6;
+        }
+
+        .page {
+            width: var(--page-width);
+            max-width: 92vw;
+            margin: 0 auto;
+            padding: 22px 0 70px;
+        }
+
+        .top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(18, 16, 30, 0.78);
+            border: 0;
+            box-shadow:
+                0 18px 46px rgba(0, 0, 0, 0.45),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .sub {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: 0.4px;
+        }
+
+        .back {
+            font-size: 12px;
+            color: #e6e6e6;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 0;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+            box-shadow:
+                0 14px 30px rgba(0, 0, 0, 0.34),
+                0 0 0 1px rgba(255, 255, 255, 0.10) inset;
+        }
+
+        .back:hover {
+            background: rgba(255, 79, 216, 0.18);
+        }
+
+        .hero {
+            margin-top: 16px;
+            padding: 18px 16px;
+            border-radius: 16px;
+            background: rgba(18, 16, 30, 0.78);
+            border: 0;
+            box-shadow:
+                0 16px 40px rgba(0, 0, 0, 0.42),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .hero p {
+            margin: 8px 0 0;
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .showcase {
+            margin-top: 16px;
+            border-radius: 0;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            padding: 0;
+        }
+
+        .showcase__grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 14px;
+            align-items: start;
+            justify-content: center;
+        }
+
+        .showcase__item {
+            margin: 0;
+            border-radius: 0;
+            overflow: visible;
+            position: static;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+
+        .showcase__item--wide { width: min(520px, 100%); }
+        .showcase__item--square { width: min(320px, 100%); }
+
+        .showcase__img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.44);
+        }
+
+        .form {
+            margin-top: 16px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .q {
+            border-radius: 16px;
+            background: rgba(18, 16, 30, 0.78);
+            border: 0;
+            padding: 14px 14px 12px;
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.40),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .q.is-missing {
+            box-shadow:
+                0 14px 34px rgba(0, 0, 0, 0.40),
+                0 0 0 2px rgba(255, 79, 216, 0.22) inset,
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .q__head {
+            display: flex;
+            gap: 10px;
+            align-items: baseline;
+        }
+
+        .q__idx {
+            font-size: 12px;
+            color: rgba(214, 235, 245, 0.66);
+            min-width: 34px;
+        }
+
+        .q__text {
+            font-size: 13px;
+            line-height: 1.65;
+            color: #e8e8e8;
+        }
+
+        .opts {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .opt {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-radius: 16px;
+            padding: 10px 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 0;
+            cursor: pointer;
+            user-select: none;
+            transition: transform .12s ease, border-color .12s ease, background .12s ease, box-shadow .12s ease;
+        }
+
+        .opt:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 79, 216, 0.12);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+        }
+
+        .opt input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+        }
+
+        .opt span {
+            font-size: 12px;
+            color: #d8d8d8;
+            line-height: 1.5;
+        }
+
+        .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 999px;
+            height: 42px;
+            padding: 0 14px;
+            cursor: pointer;
+            font-size: 13px;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+            transition: transform .12s ease, filter .12s ease, border-color .12s ease;
+            box-shadow:
+                0 14px 30px rgba(0, 0, 0, 0.36),
+                0 0 0 1px rgba(255, 255, 255, 0.10) inset;
+        }
+
+        .btn--ghost {
+            background: rgba(255, 255, 255, 0.10);
+            color: rgba(240, 250, 255, 0.90);
+        }
+
+        .btn--ghost:hover { filter: brightness(1.08); }
+
+        .btn--primary {
+            background: rgba(255, 79, 216, 0.88);
+            color: #ffffff;
+        }
+
+        .btn--primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+
+        .result {
+            margin-top: 16px;
+            border-radius: 16px;
+            background: rgba(18, 16, 30, 0.84);
+            border: 0;
+            padding: 16px;
+            display: none;
+            box-shadow:
+                0 18px 46px rgba(0, 0, 0, 0.42),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+        }
+
+        .result.is-show {
+            display: block;
+        }
+
+        .score {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .scoreline {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #e8e8e8;
+            line-height: 1.6;
+        }
+
+        .scoreline .score {
+            display: inline-block;
+            margin: 0 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 0;
+            color: rgba(245, 242, 255, 0.92);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .desc {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #c7c7c7;
+            line-height: 1.8;
+        }
+
+        .apply {
+            margin-top: 12px;
+            display: none;
+        }
+
+        .apply.is-show {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .flash {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .flash.is-show {
+            display: flex;
+        }
+
+        .flash__img {
+            display: block;
+            width: min(520px, 72vw);
+            height: auto;
+            max-height: 72vh;
+            transform: translateZ(0);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65);
+            border-radius: 14px;
+        }
+
+        .is-hide {
+            display: none !important;
+        }
+
+        @media (max-width: 860px) {
+            .showcase__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .showcase__item--wide { width: min(420px, 100%); }
+            .showcase__item--square { width: min(260px, 100%); }
+
+            .page {
+                max-width: 94vw;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .showcase__item--wide { width: min(360px, 100%); }
+            .showcase__item--square { width: min(220px, 100%); }
+            .flash__img { width: min(420px, 80vw); max-height: 70vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="top">
+            <div class="brand">
+                <div class="title">灵天中学·学习潜能评估系统</div>
+                <div class="sub">本测评基于脑科学及认知心理学前沿理论编制，用于评估学生的注意力、记忆力、想象力及综合学习潜能。共20题，完成后系统将生成你的专属潜能指数。</div>
+            </div>
+            <a class="back" href="index.html">返回首页</a>
+        </div>
+
+        <div class="hero">
+            <h1>陨力测试</h1>
+            <p>开始前，提醒受试者保持环境安静、心态平和，凭第一印象作答。</p>
+        </div>
+
+        <div class="showcase" aria-label="陨力测试展示区域">
+            <div class="showcase__grid">
+                <figure class="showcase__item showcase__item--wide">
+                    <img class="showcase__img" src="image/陨力测试1.gif" alt="陨力测试展示图 1" decoding="async" fetchpriority="high">
+                </figure>
+                <figure class="showcase__item showcase__item--square">
+                    <img class="showcase__img" src="image/陨力测试2.gif" alt="陨力测试展示图 2" decoding="async">
+                </figure>
+            </div>
+        </div>
+
+        <form class="form" id="form">
+            <div class="q" data-q="q1">
+                <div class="q__head">
+                    <div class="q__idx">01</div>
+                    <div class="q__text">上课时，你是否经常觉得窗外有什么东西在吸引你，而你忍不住朝外看？</div>
+                </div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q1" value="3"><span>A. 经常</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q1" value="1"><span>C. 从不</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q2">
+                <div class="q__head"><div class="q__idx">02</div><div class="q__text">背诵课文时，你是否会在脑海中自动形成画面？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q2" value="3"><span>A. 画面很清晰</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="2"><span>B. 有时有</span></label>
+                    <label class="opt"><input type="radio" name="q2" value="1"><span>C. 从来都是纯文字</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q3">
+                <div class="q__head"><div class="q__idx">03</div><div class="q__text">你是否曾有过这种感受，某个瞬间突然觉得眼前的场景很熟悉，好像以前经历过一样？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q3" value="2"><span>A. 有</span></label>
+                    <label class="opt"><input type="radio" name="q3" value="1"><span>B. 没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q4">
+                <div class="q__head"><div class="q__idx">04</div><div class="q__text">你是否有过入侵性的记忆或想法？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q4" value="3"><span>A. 经常</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q4" value="1"><span>C. 从不</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q5">
+                <div class="q__head"><div class="q__idx">05</div><div class="q__text">你对肉食的偏好如何？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q5" value="3"><span>A. 特别喜欢</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="2"><span>B. 一般</span></label>
+                    <label class="opt"><input type="radio" name="q5" value="1"><span>C. 不太喜欢</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q6"><div class="q__head"><div class="q__idx">06</div><div class="q__text">你是否觉得自己的注意力比其他同学更难集中，但也更容易注意到别人注意不到的东西？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q6" value="3"><span>A. 是</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="2"><span>B. 不是</span></label>
+                    <label class="opt"><input type="radio" name="q6" value="1"><span>C. 不确定</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q7"><div class="q__head"><div class="q__idx">07</div><div class="q__text">当你长时间盯着某个汉字看，是否发现它变得不像一个字了？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q7" value="3"><span>A. 经常这样</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q7" value="1"><span>C. 从来没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q8"><div class="q__head"><div class="q__idx">08</div><div class="q__text">纸能在火中燃烧吗？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q8" value="3"><span>A. 可以</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="2"><span>B. 不可以</span></label>
+                    <label class="opt"><input type="radio" name="q8" value="1"><span>C. 我不知道</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q9"><div class="q__head"><div class="q__idx">09</div><div class="q__text">你做梦的频率和清晰度如何？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q9" value="3"><span>A. 几乎每天，醒来还有印象</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q9" value="1"><span>C. 很少记得</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q10"><div class="q__head"><div class="q__idx">10</div><div class="q__text">你对昆虫的观察习惯是？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q10" value="3"><span>A. 会停下来看</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="2"><span>B. 不讨厌也不多看</span></label>
+                    <label class="opt"><input type="radio" name="q10" value="1"><span>C. 比较排斥</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q11"><div class="q__head"><div class="q__idx">11</div><div class="q__text">你在集体活动中是否更容易感到疲倦？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q11" value="3"><span>A. 经常会</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q11" value="1"><span>C. 不会</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q12"><div class="q__head"><div class="q__idx">12</div><div class="q__text">你是否在即将睡着或刚醒时，身体短暂地动不了，但意识很清醒？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q12" value="3"><span>A. 有过</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="2"><span>B. 没有</span></label>
+                    <label class="opt"><input type="radio" name="q12" value="1"><span>C. 不确定</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q13"><div class="q__head"><div class="q__idx">13</div><div class="q__text">你走在路上，是否有时突然觉得眼前的一切很陌生？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q13" value="2"><span>A. 有过</span></label>
+                    <label class="opt"><input type="radio" name="q13" value="1"><span>B. 没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q14"><div class="q__head"><div class="q__idx">14</div><div class="q__text">你是否突然有过完全不像自己的时刻？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q14" value="2"><span>A. 有过</span></label>
+                    <label class="opt"><input type="radio" name="q14" value="1"><span>B. 没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q15"><div class="q__head"><div class="q__idx">15</div><div class="q__text">闭上眼睛以后，你是否能在黑暗里看到流动的光点或模糊的形状？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q15" value="3"><span>A. 经常</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="2"><span>B. 偶尔</span></label>
+                    <label class="opt"><input type="radio" name="q15" value="1"><span>C. 从来没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q16"><div class="q__head"><div class="q__idx">16</div><div class="q__text">以下颜色中，哪个颜色对你最有吸引力？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q16" value="1"><span>深蓝</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="2"><span>浅蓝</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="3"><span>白色</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="4"><span>灰色</span></label>
+                    <label class="opt"><input type="radio" name="q16" value="5"><span>黑色</span></label>
+                    <label class="opt">
+                        <input type="radio" name="q16" value="6">
+                        <span>其他</span>
+                        <input type="text" name="q16_other" placeholder="____" style="margin-left:8px;flex:1;min-width:120px;height:28px;background:#121212;border:1px solid #2f2f2f;border-radius:3px;color:#e8e8e8;padding:0 8px;">
+                    </label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q17"><div class="q__head"><div class="q__idx">17</div><div class="q__text">你是否相信世界上存在无法被科学解释的事物？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q17" value="3"><span>A. 相信</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="2"><span>B. 不信</span></label>
+                    <label class="opt"><input type="radio" name="q17" value="1"><span>C. 不确定</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q18"><div class="q__head"><div class="q__idx">18</div><div class="q__text">最近身体怎么样？胃口有变化吗？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q18" value="2"><span>A. 有</span></label>
+                    <label class="opt"><input type="radio" name="q18" value="1"><span>B. 没有</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q19"><div class="q__head"><div class="q__idx">19</div><div class="q__text">你觉得自己的记忆力在最近一学期有什么变化？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q19" value="3"><span>A. 变好了</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="2"><span>B. 变差了</span></label>
+                    <label class="opt"><input type="radio" name="q19" value="1"><span>C. 差不多</span></label>
+                </div>
+            </div>
+
+            <div class="q" data-q="q20"><div class="q__head"><div class="q__idx">20</div><div class="q__text">晚上睡觉前，有没有感觉房间里有别的人？</div></div>
+                <div class="opts">
+                    <label class="opt"><input type="radio" name="q20" value="2"><span>A. 有过</span></label>
+                    <label class="opt"><input type="radio" name="q20" value="1"><span>B. 没有</span></label>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn--primary" type="submit">提交测评</button>
+            </div>
+        </form>
+
+        <div class="result" id="result">
+            <div class="desc" id="systemTip"></div>
+            <div class="scoreline">
+                你的学习潜能指数：<span class="score" id="score">--</span>分。等级：优秀。
+            </div>
+            <div class="desc" id="report"></div>
+            <div class="apply" id="apply">
+                <a class="btn btn--primary" id="applyBtn" href="index.html#contact">点击下方按钮预约</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="flash" id="flash" aria-hidden="true">
+        <img class="flash__img" id="flashImg" alt="">
+    </div>
+
+    <script>
+        (function () {
+            var form = document.getElementById("form");
+            var result = document.getElementById("result");
+            var scoreEl = document.getElementById("score");
+            var apply = document.getElementById("apply");
+            var systemTipEl = document.getElementById("systemTip");
+            var reportEl = document.getElementById("report");
+            var applyBtn = document.getElementById("applyBtn");
+            var flash = document.getElementById("flash");
+            var flashImg = document.getElementById("flashImg");
+
+            if (!form || !result || !scoreEl || !apply || !systemTipEl || !reportEl || !applyBtn || !flash || !flashImg) return;
+
+            var names = [];
+            for (var i = 1; i <= 20; i++) names.push("q" + i);
+            var qEls = form.querySelectorAll(".q");
+            var submitBtn = form.querySelector('button[type="submit"]');
+            var step = 0;
+            var submitted = false;
+            var fixedScore = null;
+
+            function scrollToEl(el) {
+                try {
+                    el.scrollIntoView({ behavior: "smooth", block: "center" });
+                } catch (e) {
+                    el.scrollIntoView();
+                }
+            }
+
+            function clearMissing() {
+                var qs = form.querySelectorAll(".q.is-missing");
+                for (var i = 0; i < qs.length; i++) qs[i].classList.remove("is-missing");
+            }
+
+            function getCheckedForStep(idx) {
+                var n = names[idx];
+                if (!n) return null;
+                var checked = form.querySelector('input[name="' + n + '"]:checked');
+                if (!checked) return null;
+                if (n === "q16" && String(checked.value) === "6") {
+                    var other = form.querySelector('input[name="q16_other"]');
+                    if (!other || !String(other.value || "").trim()) return null;
+                }
+                return checked;
+            }
+
+            function updateNav() {
+                var isLast = step >= names.length - 1;
+                var checked = getCheckedForStep(step);
+                if (submitBtn) {
+                    submitBtn.classList.toggle("is-hide", !isLast);
+                    submitBtn.disabled = !isLast || !checked;
+                }
+            }
+
+            function showStep(idx) {
+                step = idx;
+                for (var i = 0; i < qEls.length; i++) qEls[i].hidden = i !== step;
+                clearMissing();
+                updateNav();
+                if (qEls[step]) scrollToEl(qEls[step]);
+            }
+
+            function checkAllAnswered() {
+                clearMissing();
+                for (var i = 0; i < names.length; i++) {
+                    var n = names[i];
+                    var checked = form.querySelector('input[name="' + n + '"]:checked');
+                    if (!checked || (n === "q16" && String(checked.value) === "6" && !String((form.querySelector('input[name="q16_other"]') || {}).value || "").trim())) {
+                        showStep(i);
+                        var box = qEls[i];
+                        if (box) box.classList.add("is-missing");
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            function computeScore() {
+                if (fixedScore !== null) return fixedScore;
+                fixedScore = 90 + Math.floor(Math.random() * 10);
+                return fixedScore;
+            }
+
+            function showResult() {
+                if (submitted) return;
+                submitted = true;
+                result.classList.add("is-show");
+                if (submitBtn) submitBtn.disabled = true;
+                scrollToEl(result);
+
+                scoreEl.textContent = "--";
+                systemTipEl.textContent = "系统提示：正在分析你的潜能分布。评估报告加载中。";
+                reportEl.textContent = "";
+
+                setTimeout(function () {
+                    var s = computeScore();
+                    scoreEl.textContent = String(s);
+                    systemTipEl.textContent = "";
+                    reportEl.textContent = "综合判断你的注意力类型为高分散型，想象力类型为图像优先型，记忆编码方式为情绪锚点型。在特定条件下，你可能具备超出常人的感知灵敏度。建议参加线下清理仪式进一步评估。点击下方按钮预约。";
+                    apply.classList.add("is-show");
+                }, 1200);
+            }
+
+            function showFlashAndRedirect() {
+                var src = Math.random() < 0.5 ? "image/jump/1.png" : "image/jump/2.png";
+                flashImg.src = src;
+                flashImg.alt = "";
+                flash.classList.add("is-show");
+                flash.setAttribute("aria-hidden", "false");
+
+                var start = performance.now();
+                var minVisibleMs = 90;
+
+                function tick(now) {
+                    if (now - start < minVisibleMs) {
+                        requestAnimationFrame(tick);
+                        return;
+                    }
+                    flash.classList.remove("is-show");
+                    flash.setAttribute("aria-hidden", "true");
+                    window.location.href = "index.html";
+                }
+
+                requestAnimationFrame(tick);
+            }
+
+            form.addEventListener("change", function (e) {
+                var t = e.target;
+                if (!t) return;
+                if (t.type === "radio") {
+                    if (qEls[step] && qEls[step].contains(t)) {
+                        if (qEls[step]) qEls[step].classList.remove("is-missing");
+                        updateNav();
+                        if (step < names.length - 1 && getCheckedForStep(step)) {
+                            setTimeout(function () {
+                                if (step < names.length - 1) showStep(step + 1);
+                            }, 120);
+                        }
+                    } else {
+                        var box = t.closest ? t.closest(".q") : null;
+                        if (box) box.classList.remove("is-missing");
+                    }
+                    return;
+                }
+
+                if (t.name === "q16_other") {
+                    updateNav();
+                    if (step < names.length - 1 && getCheckedForStep(step)) {
+                        setTimeout(function () {
+                            if (step < names.length - 1) showStep(step + 1);
+                        }, 120);
+                    }
+                }
+            });
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (submitted) return;
+                if (!checkAllAnswered()) return;
+                showResult();
+            });
+
+            showStep(0);
+
+            applyBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                showFlashAndRedirect();
+            });
+        })();
+    </script>
+</body>
+</html>
